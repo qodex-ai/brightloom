@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { requireSession } from '../auth.js';
 import { getDb } from '../db.js';
-import { badRequest } from '../errors.js';
+import { badRequest, notFound } from '../errors.js';
 import { listInvoices } from '../queries.js';
 import type { AppEnv, OrgRow } from '../types.js';
 
@@ -12,6 +12,8 @@ const SEAT_PRICE_CENTS: Record<string, number> = {
 };
 
 export const billingRoutes = new Hono<AppEnv>();
+
+const INVOICE_PDF = '%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF\n';
 
 billingRoutes.get('/billing/subscription', requireSession, (c) => {
   const { org } = c.get('session');
@@ -40,6 +42,20 @@ billingRoutes.get('/billing/subscription', requireSession, (c) => {
 billingRoutes.get('/billing/invoices', requireSession, (c) => {
   const { org } = c.get('session');
   return c.json({ invoices: listInvoices(org.id) });
+});
+
+billingRoutes.get('/billing/invoices/:id/pdf', requireSession, (c) => {
+  const { org } = c.get('session');
+  const id = Number(c.req.param('id'));
+  const invoice = getDb()
+    .prepare('SELECT id FROM invoices WHERE id = ? AND org_id = ?')
+    .get(id, org.id);
+  if (!invoice) throw notFound('That invoice does not exist');
+
+  return c.body(INVOICE_PDF, 200, {
+    'Content-Disposition': `attachment; filename="invoice-${id}.pdf"`,
+    'Content-Type': 'application/pdf',
+  });
 });
 
 billingRoutes.post('/billing/webhook', async (c) => {
