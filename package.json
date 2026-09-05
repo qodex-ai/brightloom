@@ -1,0 +1,48 @@
+{
+  "name": "brightloom",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Task and billing app for small teams",
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n server,ui -c blue,magenta \"pnpm dev:server\" \"pnpm dev:ui\"",
+    "dev:server": "cross-env PORT=4101 tsx watch src/server/index.ts",
+    "dev:ui": "vite",
+    "build": "pnpm build:server && pnpm build:ui && pnpm openapi",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build:ui": "vite build",
+    "openapi": "tsx src/scripts/write-openapi.ts",
+    "start": "node dist/server/index.js",
+    "seed": "tsx src/scripts/seed.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.ui.json --noEmit",
+    "test": "node --import tsx --test test/*.test.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^13.0.3",
+    "hono": "^4.6.14",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.17",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  }
+}

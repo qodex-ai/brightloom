@@ -1,0 +1,6 @@
+extends:
+  - recommended
+
+rules:
+  # Brightloom runs on the machine it is installed on, so localhost is the real server.
+  no-server-example.com: off
