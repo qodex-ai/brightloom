@@ -105,6 +105,7 @@ export const api = {
     priority?: number;
     due_date?: string | null;
     assignee_id?: number | null;
+    repeats_weekly?: boolean;
   }) => request<{ task: Task }>('/tasks', { method: 'POST', body: body(input) }),
 
   updateTask: (
@@ -116,6 +117,7 @@ export const api = {
       priority?: number;
       due_date?: string | null;
       assignee_id?: number | null;
+      repeats_weekly?: boolean;
     },
   ) => request<{ task: Task }>(`/tasks/${id}`, { method: 'PATCH', body: body(patch) }),
 

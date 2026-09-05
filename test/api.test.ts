@@ -133,11 +133,17 @@ describe('tasks', () => {
       project_id: projectId,
       priority: 2,
       due_date: '2030-01-15',
+      repeats_weekly: true,
     });
     assert.equal(created.status, 201);
     const id = created.json.task.id;
     assert.equal(created.json.task.status, 'open');
     assert.equal(created.json.task.project_name, projects.json.projects[0].name);
+    assert.equal(created.json.task.repeats_weekly, true);
+
+    const updatedRepeat = await call('PATCH', `/api/v1/tasks/${id}`, { repeats_weekly: false });
+    assert.equal(updatedRepeat.status, 200);
+    assert.equal(updatedRepeat.json.task.repeats_weekly, false);
 
     const completed = await call('PATCH', `/api/v1/tasks/${id}`, { status: 'done' });
     assert.equal(completed.status, 200);

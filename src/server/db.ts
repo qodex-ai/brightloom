@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS tasks (
   priority INTEGER NOT NULL DEFAULT 3,
   due_date TEXT,
   assignee_id INTEGER REFERENCES users(id),
+  repeats_weekly INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL,
   completed_at TEXT
 );
