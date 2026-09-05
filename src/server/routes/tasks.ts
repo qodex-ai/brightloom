@@ -55,6 +55,29 @@ taskRoutes.get('/tasks/completed/stats', (c) => {
   return c.json({ days: completedStats(org.id) });
 });
 
+taskRoutes.post('/tasks/bulk-complete', async (c) => {
+  const body = await c.req.json().catch(() => null);
+  const ids = body?.ids;
+  if (!Array.isArray(ids) || ids.length === 0 || !ids.every(Number.isInteger)) {
+    throw badRequest('ids must be a non-empty array of task ids');
+  }
+
+  const db = getDb();
+  const now = new Date().toISOString();
+  const tasks = ids.map((id) => {
+    const task = getTaskById(id);
+    if (!task) throw notFound('That task does not exist');
+    db.prepare('UPDATE tasks SET status = ?, completed_at = ? WHERE id = ?').run(
+      'done',
+      task.status === 'done' ? task.completed_at : now,
+      id,
+    );
+    return publicTask(getTaskById(id)!);
+  });
+
+  return c.json({ tasks });
+});
+
 taskRoutes.post('/tasks', async (c) => {
   const { org } = c.get('session');
   const body = await c.req.json().catch(() => null);

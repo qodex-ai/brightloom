@@ -522,6 +522,46 @@
         }
       }
     },
+    "/api/v1/tasks/bulk-complete": {
+      "post": {
+        "tags": [
+          "Tasks"
+        ],
+        "operationId": "bulkCompleteTasks",
+        "summary": "Mark several tasks as done",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkCompleteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The completed tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkCompleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
     "/api/v1/tasks/{id}": {
       "parameters": [
         {
@@ -1548,6 +1588,35 @@
         "properties": {
           "task": {
             "$ref": "#/components/schemas/Task"
+          }
+        }
+      },
+      "BulkCompleteRequest": {
+        "type": "object",
+        "required": [
+          "ids"
+        ],
+        "properties": {
+          "ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "BulkCompleteResponse": {
+        "type": "object",
+        "required": [
+          "tasks"
+        ],
+        "properties": {
+          "tasks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Task"
+            }
           }
         }
       },

@@ -36,6 +36,7 @@ export function ProjectView({
   const [status, setStatus] = useState('open');
   const [assignee, setAssignee] = useState('');
   const [title, setTitle] = useState('');
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -91,6 +92,24 @@ export function ProjectView({
     } catch (err) {
       setError((err as Error).message);
     }
+  }
+
+  async function completeSelected() {
+    if (selectedIds.length === 0) return;
+    try {
+      await api.bulkComplete(selectedIds);
+      setSelectedIds([]);
+      await load();
+      onTaskChanged();
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  }
+
+  function toggleSelection(task: Task) {
+    setSelectedIds((ids) =>
+      ids.includes(task.id) ? ids.filter((id) => id !== task.id) : [...ids, task.id],
+    );
   }
 
   async function removeProject() {
@@ -164,6 +183,14 @@ export function ProjectView({
         <span className="ml-auto text-sm text-ink-faint">
           {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
         </span>
+        <button
+          type="button"
+          className="btn-secondary"
+          disabled={selectedIds.length === 0}
+          onClick={completeSelected}
+        >
+          Complete selected
+        </button>
       </div>
 
       {error ? (
@@ -190,6 +217,9 @@ export function ProjectView({
               onOpen={onOpenTask}
               selected={selectedTaskId === task.id}
               showProject={false}
+              showSelection={task.status === 'open'}
+              selectionChecked={selectedIds.includes(task.id)}
+              onSelectionChange={toggleSelection}
             />
           ))}
         </div>

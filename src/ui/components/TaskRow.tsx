@@ -9,6 +9,9 @@ interface Props {
   showProject?: boolean;
   showDue?: boolean;
   selected?: boolean;
+  showSelection?: boolean;
+  selectionChecked?: boolean;
+  onSelectionChange?: (task: Task) => void;
 }
 
 export function TaskRow({
@@ -18,6 +21,9 @@ export function TaskRow({
   showProject = true,
   showDue = true,
   selected = false,
+  showSelection = false,
+  selectionChecked = false,
+  onSelectionChange,
 }: Props) {
   const done = task.status === 'done';
   const overdue = !done && task.due_date !== null && daysFromToday(task.due_date) < 0;
@@ -28,6 +34,16 @@ export function TaskRow({
         selected ? 'bg-accent-soft' : 'hover:bg-canvas'
       }`}
     >
+      {showSelection ? (
+        <input
+          type="checkbox"
+          className="mt-1 shrink-0"
+          checked={selectionChecked}
+          onChange={() => onSelectionChange?.(task)}
+          aria-label={`Select ${task.title}`}
+        />
+      ) : null}
+
       <button
         type="button"
         className="mt-0.5 shrink-0"
