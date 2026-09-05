@@ -84,6 +84,10 @@ export function openDatabase(file = databaseFile()): Db {
   const db = new Database(file);
   db.pragma('journal_mode = WAL');
   db.exec(SCHEMA);
+  const taskColumns = db.prepare('PRAGMA table_info(tasks)').all() as { name: string }[];
+  if (!taskColumns.some((column) => column.name === 'labels')) {
+    db.exec("ALTER TABLE tasks ADD COLUMN labels TEXT NOT NULL DEFAULT ''");
+  }
   return db;
 }
 
