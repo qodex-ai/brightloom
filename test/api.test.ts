@@ -206,6 +206,12 @@ describe('billing and utilities', () => {
     assert.equal(result.json.timezone, 'Asia/Kolkata');
   });
 
+  it('uses UTC when an offset has no matching timezone', async () => {
+    const result = await call('POST', '/api/v1/guess_timezone', { offset_minutes: 345 });
+    assert.equal(result.status, 200);
+    assert.equal(result.json.timezone, 'UTC');
+  });
+
   it('serves the openapi document', async () => {
     const response = await app.request('/openapi.json');
     assert.equal(response.status, 200);
