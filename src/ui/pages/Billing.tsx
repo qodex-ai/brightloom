@@ -97,7 +97,7 @@ export function Billing() {
           <div>
             <dt className="label">Next invoice</dt>
             <dd className="mt-1 text-sm tabular-nums text-ink">
-              {formatMoney(subscription.next_invoice.amount_cents)} on{' '}
+              {formatMoney(subscription.next_invoice.amount_cents)} in{' '}
               {formatMonth(subscription.next_invoice.period)}
             </dd>
           </div>
