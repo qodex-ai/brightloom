@@ -22,6 +22,10 @@ const ZONES: Record<string, string> = {
 
 export const miscRoutes = new Hono<AppEnv>();
 
+function timezoneForOffset(offset: number): string {
+  return ZONES[String(offset)] ?? 'UTC';
+}
+
 miscRoutes.post('/guess_timezone', requireSession, async (c) => {
   const body = await c.req.json().catch(() => null);
   const offset = Number(body?.offset_minutes);
@@ -29,7 +33,7 @@ miscRoutes.post('/guess_timezone', requireSession, async (c) => {
     throw badRequest('offset_minutes must be a number of minutes from UTC');
   }
   const rounded = Math.round(offset / 15) * 15;
-  const timezone = ZONES[String(rounded)] ?? 'UTC';
+  const timezone = timezoneForOffset(rounded);
   return c.json({ timezone, offset_minutes: rounded });
 });
 
