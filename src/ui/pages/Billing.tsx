@@ -131,7 +131,14 @@ export function Billing() {
                     {invoice.status}
                   </span>
                 </td>
-                <td className="py-2.5 font-mono text-xs text-ink-faint">BL-{invoice.id}</td>
+                <td className="py-2.5">
+                  <a
+                    className="font-mono text-xs text-accent hover:underline"
+                    href={`/api/v1/billing/invoices/${invoice.id}/pdf`}
+                  >
+                    Download PDF
+                  </a>
+                </td>
               </tr>
             ))}
             {invoices.length === 0 ? (

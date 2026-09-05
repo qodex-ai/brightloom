@@ -361,6 +361,30 @@ export const openapiDocument = {
         },
       },
     },
+    '/api/v1/billing/invoices/{id}/pdf': {
+      parameters: [
+        {
+          name: 'id',
+          in: 'path',
+          required: true,
+          description: 'Invoice id',
+          schema: { type: 'integer' },
+        },
+      ],
+      get: {
+        tags: ['Billing'],
+        operationId: 'downloadInvoicePdf',
+        summary: 'Download an invoice PDF',
+        responses: {
+          '200': {
+            description: 'The invoice PDF',
+            content: { 'application/pdf': { schema: { type: 'string', format: 'binary' } } },
+          },
+          '401': errorRef('Unauthorized'),
+          '404': errorRef('NotFound'),
+        },
+      },
+    },
     '/api/v1/billing/webhook': {
       post: {
         tags: ['Billing'],

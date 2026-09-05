@@ -198,6 +198,13 @@ describe('billing and utilities', () => {
 
     const invoices = await call('GET', '/api/v1/billing/invoices');
     assert.equal(invoices.json.invoices.length, 3);
+
+    const response = await app.request(`/api/v1/billing/invoices/${invoices.json.invoices[0].id}/pdf`, {
+      headers: { Cookie: cookie },
+    });
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('content-type'), 'application/pdf');
+    assert.ok((await response.text()).startsWith('%PDF-1.4'));
   });
 
   it('suggests a timezone for an offset', async () => {
