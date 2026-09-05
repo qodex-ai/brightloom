@@ -32,6 +32,7 @@ export function App() {
   const [session, setSession] = useState<{ user: User; org: Org } | null>(null);
   const [ready, setReady] = useState(false);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [overdueCount, setOverdueCount] = useState(0);
   const [members, setMembers] = useState<Member[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
   const [updatedTask, setUpdatedTask] = useState<Task | null>(null);
@@ -50,9 +51,14 @@ export function App() {
   }, []);
 
   const loadWorkspace = useCallback(async () => {
-    const [projectList, org] = await Promise.all([api.projects(), api.org()]);
+    const [projectList, org, overdue] = await Promise.all([
+      api.projects(),
+      api.org(),
+      api.tasks({ due: 'overdue', limit: 1 }),
+    ]);
     setProjects(projectList.projects);
     setMembers(org.members);
+    setOverdueCount(overdue.total);
   }, []);
 
   useEffect(() => {
@@ -162,6 +168,7 @@ export function App() {
         user={session.user}
         org={session.org}
         projects={projects}
+        overdueCount={overdueCount}
         path={path}
         navigate={(to) => {
           setSelected(null);

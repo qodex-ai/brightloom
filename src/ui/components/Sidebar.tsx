@@ -8,6 +8,7 @@ interface Props {
   user: User;
   org: Org;
   projects: Project[];
+  overdueCount: number;
   path: string;
   navigate: (to: string) => void;
   onProjectsChanged: () => void;
@@ -49,6 +50,7 @@ export function Sidebar({
   user,
   org,
   projects,
+  overdueCount,
   path,
   navigate,
   onProjectsChanged,
@@ -87,7 +89,12 @@ export function Sidebar({
       </div>
 
       <div className="space-y-0.5 px-2.5">
-        <NavItem label="Today" active={path === '/'} onClick={() => navigate('/')} />
+        <NavItem
+          label="Today"
+          active={path === '/'}
+          onClick={() => navigate('/')}
+          trailing={overdueCount > 0 ? String(overdueCount) : undefined}
+        />
         <NavItem
           label="Upcoming"
           active={path === '/upcoming'}

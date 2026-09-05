@@ -1,3 +1,5 @@
+import type { Task } from './types.js';
+
 export const PROJECT_COLORS: Record<string, string> = {
   blue: '#2f5fd0',
   amber: '#b8791f',
@@ -112,4 +114,11 @@ export function groupBy<T>(items: T[], key: (item: T) => string): [string, T[]][
     else map.set(k, [item]);
   }
   return [...map.entries()];
+}
+
+export function sortOverdueTasks(tasks: Task[]): Task[] {
+  return [...tasks].sort((a, b) => {
+    if (a.priority !== b.priority) return a.priority - b.priority;
+    return (a.due_date ?? '').localeCompare(b.due_date ?? '');
+  });
 }
