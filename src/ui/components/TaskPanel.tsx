@@ -15,6 +15,7 @@ interface Props {
 export function TaskPanel({ taskId, members, onClose, onChanged, onDeleted }: Props) {
   const [task, setTask] = useState<Task | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [showOlderComments, setShowOlderComments] = useState(false);
   const [draft, setDraft] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -31,6 +32,7 @@ export function TaskPanel({ taskId, members, onClose, onChanged, onDeleted }: Pr
         if (!active) return;
         setTask(data.task);
         setComments(data.comments);
+        setShowOlderComments(false);
         setTitle(data.task.title);
         setDescription(data.task.description);
       })
@@ -62,7 +64,7 @@ export function TaskPanel({ taskId, members, onClose, onChanged, onDeleted }: Pr
     if (!task || !draft.trim()) return;
     try {
       const result = await api.addComment(task.id, draft.trim());
-      setComments((current) => [...current, result.comment]);
+      setComments((current) => [result.comment, ...current]);
       setDraft('');
     } catch (err) {
       setError((err as Error).message);
@@ -74,6 +76,8 @@ export function TaskPanel({ taskId, members, onClose, onChanged, onDeleted }: Pr
     await api.deleteTask(task.id);
     onDeleted(task.id);
   }
+
+  const visibleComments = showOlderComments ? comments : comments.slice(0, 3);
 
   return (
     <aside className="flex h-full w-full flex-col border-l border-line bg-surface lg:w-[400px]">
@@ -202,7 +206,7 @@ export function TaskPanel({ taskId, members, onClose, onChanged, onDeleted }: Pr
           <div className="mt-6 border-t border-line pt-4">
             <h3 className="label">Comments</h3>
             <ul className="mt-3 space-y-4">
-              {comments.map((comment) => (
+              {visibleComments.map((comment) => (
                 <li key={comment.id}>
                   <div className="flex items-baseline gap-2">
                     <span className="text-sm font-medium text-ink">{comment.author_name}</span>
@@ -217,6 +221,16 @@ export function TaskPanel({ taskId, members, onClose, onChanged, onDeleted }: Pr
                 <li className="text-sm text-ink-faint">No comments yet.</li>
               ) : null}
             </ul>
+
+            {comments.length > 3 ? (
+              <button
+                type="button"
+                className="btn-quiet mt-3 px-0"
+                onClick={() => setShowOlderComments((showing) => !showing)}
+              >
+                {showOlderComments ? 'Show fewer' : 'Show older'}
+              </button>
+            ) : null}
 
             <form className="mt-4" onSubmit={addComment}>
               <textarea

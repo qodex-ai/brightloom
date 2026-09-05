@@ -98,15 +98,22 @@ export function listTasks(filter: TaskFilter): { tasks: TaskView[]; total: numbe
 }
 
 export function listComments(taskId: number): CommentView[] {
-  return getDb()
+  const db = getDb();
+  const comments = db
     .prepare(
-      `SELECT c.id, c.task_id, c.author_id, c.body, c.created_at, u.name AS author_name
-       FROM comments c
-       JOIN users u ON u.id = c.author_id
-       WHERE c.task_id = ?
-       ORDER BY c.created_at ASC, c.id ASC`,
+      `SELECT id, task_id, author_id, body, created_at
+       FROM comments
+       WHERE task_id = ?
+       ORDER BY created_at DESC, id DESC`,
     )
-    .all(taskId) as CommentView[];
+    .all(taskId) as Omit<CommentView, 'author_name'>[];
+
+  return comments.map((comment) => {
+    const author = db
+      .prepare('SELECT name FROM users WHERE id = ?')
+      .get(comment.author_id) as Pick<UserRow, 'name'>;
+    return { ...comment, author_name: author.name };
+  });
 }
 
 export function listMembers(orgId: number): Pick<UserRow, 'id' | 'name' | 'email' | 'role'>[] {
