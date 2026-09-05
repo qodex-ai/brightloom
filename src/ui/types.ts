@@ -44,6 +44,7 @@ export interface Task {
   due_date: string | null;
   assignee_id: number | null;
   assignee_name: string | null;
+  labels: string;
   created_at: string;
   completed_at: string | null;
 }

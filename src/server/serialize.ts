@@ -41,6 +41,7 @@ export function publicTask(task: TaskView) {
     due_date: task.due_date,
     assignee_id: task.assignee_id,
     assignee_name: task.assignee_name,
+    labels: task.labels,
     created_at: task.created_at,
     completed_at: task.completed_at,
   };

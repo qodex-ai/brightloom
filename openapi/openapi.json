@@ -1139,6 +1139,7 @@
           "priority",
           "due_date",
           "assignee_id",
+          "labels",
           "created_at",
           "completed_at"
         ],
@@ -1205,6 +1206,10 @@
               "string",
               "null"
             ]
+          },
+          "labels": {
+            "type": "string",
+            "description": "Comma-separated task labels."
           },
           "created_at": {
             "type": "string",
@@ -1499,6 +1504,10 @@
               "integer",
               "null"
             ]
+          },
+          "labels": {
+            "type": "string",
+            "description": "Comma-separated task labels."
           }
         }
       },
@@ -1537,6 +1546,10 @@
               "integer",
               "null"
             ]
+          },
+          "labels": {
+            "type": "string",
+            "description": "Comma-separated task labels."
           }
         }
       },

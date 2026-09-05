@@ -18,6 +18,7 @@ export function TaskPanel({ taskId, members, onClose, onChanged, onDeleted }: Pr
   const [draft, setDraft] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [labels, setLabels] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -33,6 +34,7 @@ export function TaskPanel({ taskId, members, onClose, onChanged, onDeleted }: Pr
         setComments(data.comments);
         setTitle(data.task.title);
         setDescription(data.task.description);
+        setLabels(data.task.labels);
       })
       .catch((err: Error) => active && setError(err.message));
     return () => {
@@ -48,6 +50,7 @@ export function TaskPanel({ taskId, members, onClose, onChanged, onDeleted }: Pr
       setTask(result.task);
       setTitle(result.task.title);
       setDescription(result.task.description);
+      setLabels(result.task.labels);
       onChanged(result.task);
       setError('');
     } catch (err) {
@@ -184,6 +187,20 @@ export function TaskPanel({ taskId, members, onClose, onChanged, onDeleted }: Pr
               </dd>
             </div>
           </dl>
+
+          <div className="mt-5 border-t border-line pt-4">
+            <label className="label" htmlFor="task-labels">
+              Labels
+            </label>
+            <input
+              id="task-labels"
+              className="field mt-2"
+              value={labels}
+              placeholder="Design, launch"
+              onChange={(e) => setLabels(e.target.value)}
+              onBlur={() => labels !== task.labels && patch({ labels })}
+            />
+          </div>
 
           <div className="mt-5 border-t border-line pt-4">
             <label className="label" htmlFor="task-description">
