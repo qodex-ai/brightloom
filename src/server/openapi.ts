@@ -235,6 +235,20 @@ export const openapiDocument = {
         },
       },
     },
+    '/api/v1/tasks/bulk-complete': {
+      post: {
+        tags: ['Tasks'],
+        operationId: 'bulkCompleteTasks',
+        summary: 'Mark several tasks as done',
+        requestBody: jsonBody('BulkCompleteRequest'),
+        responses: {
+          '200': jsonResponse('The completed tasks', 'BulkCompleteResponse'),
+          '400': errorRef('BadRequest'),
+          '401': errorRef('Unauthorized'),
+          '404': errorRef('NotFound'),
+        },
+      },
+    },
     '/api/v1/tasks/{id}': {
       parameters: [
         {
@@ -632,6 +646,20 @@ export const openapiDocument = {
         type: 'object',
         required: ['task'],
         properties: { task: { $ref: '#/components/schemas/Task' } },
+      },
+      BulkCompleteRequest: {
+        type: 'object',
+        required: ['ids'],
+        properties: {
+          ids: { type: 'array', minItems: 1, items: { type: 'integer' } },
+        },
+      },
+      BulkCompleteResponse: {
+        type: 'object',
+        required: ['tasks'],
+        properties: {
+          tasks: { type: 'array', items: { $ref: '#/components/schemas/Task' } },
+        },
       },
       TaskDetailResponse: {
         type: 'object',

@@ -121,6 +121,9 @@ export const api = {
 
   deleteTask: (id: number) => request<{ ok: boolean }>(`/tasks/${id}`, { method: 'DELETE' }),
 
+  bulkComplete: (ids: number[]) =>
+    request<{ tasks: Task[] }>('/tasks/bulk-complete', { method: 'POST', body: body({ ids }) }),
+
   addComment: (taskId: number, text: string) =>
     request<{ comment: Comment }>(`/tasks/${taskId}/comments`, {
       method: 'POST',

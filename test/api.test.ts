@@ -165,6 +165,19 @@ describe('tasks', () => {
     assert.equal(result.json.error.code, 'bad_request');
   });
 
+  it('completes selected tasks in bulk', async () => {
+    const open = await call('GET', '/api/v1/tasks?status=open&limit=2');
+    const ids = open.json.tasks.map((task: { id: number }) => task.id);
+
+    const result = await call('POST', '/api/v1/tasks/bulk-complete', { ids });
+    assert.equal(result.status, 200);
+    assert.deepEqual(
+      result.json.tasks.map((task: { id: number }) => task.id),
+      ids,
+    );
+    assert.ok(result.json.tasks.every((task: { status: string }) => task.status === 'done'));
+  });
+
   it('reports completed counts for the last fourteen days', async () => {
     const result = await call('GET', '/api/v1/tasks/completed/stats');
     assert.equal(result.status, 200);
