@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { api } from '../api';
 import { TaskRow } from '../components/TaskRow';
 import { Banner, EmptyState, Spinner } from '../components/ui';
-import { formatLongDate, todayIso } from '../lib';
+import { formatLongDate, sortOverdueTasks, todayIso } from '../lib';
 import type { Task } from '../types';
 
 interface Props {
@@ -34,7 +34,7 @@ export function Today({
         api.tasks({ due: 'overdue', limit: 100 }),
         api.tasks({ due: 'today', limit: 100 }),
       ]);
-      setOverdue(late.tasks);
+      setOverdue(sortOverdueTasks(late.tasks));
       setDueToday(today.tasks);
       const all = [...late.tasks, ...today.tasks];
       setCounter({ done: all.filter((t) => t.status === 'done').length, total: all.length });
