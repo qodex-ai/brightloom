@@ -487,6 +487,7 @@ export const openapiDocument = {
           'priority',
           'due_date',
           'assignee_id',
+          'repeats_weekly',
           'created_at',
           'completed_at',
         ],
@@ -503,6 +504,7 @@ export const openapiDocument = {
           due_date: { type: ['string', 'null'], examples: ['2026-01-31'] },
           assignee_id: nullableInteger,
           assignee_name: nullableString,
+          repeats_weekly: { type: 'boolean' },
           created_at: { type: 'string', format: 'date-time' },
           completed_at: { type: ['string', 'null'], format: 'date-time' },
         },
@@ -615,6 +617,7 @@ export const openapiDocument = {
           priority: { type: 'integer', minimum: 1, maximum: 4 },
           due_date: { type: ['string', 'null'], examples: ['2026-01-31'] },
           assignee_id: nullableInteger,
+          repeats_weekly: { type: 'boolean' },
         },
       },
       TaskUpdateRequest: {
@@ -626,6 +629,7 @@ export const openapiDocument = {
           priority: { type: 'integer', minimum: 1, maximum: 4 },
           due_date: { type: ['string', 'null'], examples: ['2026-01-31'] },
           assignee_id: nullableInteger,
+          repeats_weekly: { type: 'boolean' },
         },
       },
       TaskResponse: {

@@ -183,6 +183,18 @@ export function TaskPanel({ taskId, members, onClose, onChanged, onDeleted }: Pr
                 </select>
               </dd>
             </div>
+
+            <div className="flex items-center justify-between gap-4">
+              <dt className="label">Repeats weekly</dt>
+              <dd>
+                <input
+                  type="checkbox"
+                  checked={task.repeats_weekly}
+                  onChange={(e) => patch({ repeats_weekly: e.target.checked })}
+                  aria-label="Repeats weekly"
+                />
+              </dd>
+            </div>
           </dl>
 
           <div className="mt-5 border-t border-line pt-4">

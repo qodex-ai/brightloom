@@ -88,15 +88,16 @@ taskRoutes.post('/tasks', async (c) => {
   }
 
   const description = typeof body?.description === 'string' ? body.description : '';
+  const repeatsWeekly = body?.repeats_weekly === true ? 1 : 0;
 
   const db = getDb();
   const info = db
     .prepare(
       `INSERT INTO tasks
-         (org_id, project_id, title, description, status, priority, due_date, assignee_id, created_at)
-       VALUES (?, ?, ?, ?, 'open', ?, ?, ?, ?)`,
+         (org_id, project_id, title, description, status, priority, due_date, assignee_id, repeats_weekly, created_at)
+       VALUES (?, ?, ?, ?, 'open', ?, ?, ?, ?, ?)`,
     )
-    .run(org.id, projectId, title, description, priority, dueDate, assigneeId, new Date().toISOString());
+    .run(org.id, projectId, title, description, priority, dueDate, assigneeId, repeatsWeekly, new Date().toISOString());
 
   const task = getTaskById(Number(info.lastInsertRowid))!;
   return c.json({ task: publicTask(task) }, 201);
@@ -120,6 +121,8 @@ taskRoutes.patch('/tasks/:id', async (c) => {
   if (title !== undefined && !title) throw badRequest('Title is required');
 
   const description = typeof body?.description === 'string' ? body.description : undefined;
+  const repeatsWeekly =
+    body && 'repeats_weekly' in body ? (body.repeats_weekly === true ? 1 : 0) : undefined;
 
   const status = typeof body?.status === 'string' ? body.status : undefined;
   if (status !== undefined && !STATUSES.includes(status)) {
@@ -161,6 +164,7 @@ taskRoutes.patch('/tasks/:id', async (c) => {
          priority = COALESCE(@priority, priority),
          due_date = CASE WHEN @dueDateSet = 1 THEN @dueDate ELSE due_date END,
          assignee_id = CASE WHEN @assigneeSet = 1 THEN @assigneeId ELSE assignee_id END,
+         repeats_weekly = COALESCE(@repeatsWeekly, repeats_weekly),
          completed_at = @completedAt
      WHERE id = @id`,
   ).run({
@@ -173,6 +177,7 @@ taskRoutes.patch('/tasks/:id', async (c) => {
     dueDate: dueDate ?? null,
     assigneeSet: assigneeId === undefined ? 0 : 1,
     assigneeId: assigneeId ?? null,
+    repeatsWeekly: repeatsWeekly ?? null,
     completedAt,
   });
 

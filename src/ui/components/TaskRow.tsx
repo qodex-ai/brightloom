@@ -62,6 +62,7 @@ export function TaskRow({
             )
           ) : null}
           {task.assignee_name ? <span>{task.assignee_name}</span> : null}
+          {task.repeats_weekly ? <span className="rounded bg-accent-soft px-1.5 py-px">Weekly</span> : null}
           <PriorityTag priority={task.priority} />
         </span>
       </button>

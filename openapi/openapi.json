@@ -1139,6 +1139,7 @@
           "priority",
           "due_date",
           "assignee_id",
+          "repeats_weekly",
           "created_at",
           "completed_at"
         ],
@@ -1205,6 +1206,9 @@
               "string",
               "null"
             ]
+          },
+          "repeats_weekly": {
+            "type": "boolean"
           },
           "created_at": {
             "type": "string",
@@ -1499,6 +1503,9 @@
               "integer",
               "null"
             ]
+          },
+          "repeats_weekly": {
+            "type": "boolean"
           }
         }
       },
@@ -1537,6 +1544,9 @@
               "integer",
               "null"
             ]
+          },
+          "repeats_weekly": {
+            "type": "boolean"
           }
         }
       },
