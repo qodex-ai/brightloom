@@ -53,7 +53,7 @@ export function Today({
   useEffect(() => {
     if (!updatedTask) return;
     const replace = (list: Task[]) =>
-      list.map((t) => (t.id === updatedTask.id ? updatedTask : t));
+      sortOverdueTasks(list.map((t) => (t.id === updatedTask.id ? updatedTask : t)));
     setOverdue(replace);
     setDueToday(replace);
   }, [updatedTask]);
