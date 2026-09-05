@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS projects (
 CREATE TABLE IF NOT EXISTS tasks (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   org_id INTEGER NOT NULL REFERENCES orgs(id),
-  project_id INTEGER REFERENCES projects(id),
+  project_id INTEGER,
   title TEXT NOT NULL CHECK (length(title) <= 500),
   description TEXT NOT NULL DEFAULT '',
   status TEXT NOT NULL DEFAULT 'open',
