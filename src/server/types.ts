@@ -36,6 +36,7 @@ export interface TaskRow {
   priority: number;
   due_date: string | null;
   assignee_id: number | null;
+  labels: string;
   created_at: string;
   completed_at: string | null;
 }

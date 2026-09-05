@@ -62,6 +62,15 @@ export function TaskRow({
             )
           ) : null}
           {task.assignee_name ? <span>{task.assignee_name}</span> : null}
+          {task.labels
+            .split(',')
+            .map((label) => label.trim())
+            .filter(Boolean)
+            .map((label) => (
+              <span key={label} className="rounded bg-canvas px-1.5 py-px text-ink-soft">
+                {label}
+              </span>
+            ))}
           <PriorityTag priority={task.priority} />
         </span>
       </button>
